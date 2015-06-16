@@ -4,6 +4,8 @@
     {
         string Version { get; set; }
 
+        bool Connected { get; set; }
+
         void Monitor();
     }
 }

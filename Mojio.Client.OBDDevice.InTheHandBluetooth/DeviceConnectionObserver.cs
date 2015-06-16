@@ -9,6 +9,8 @@ namespace Mojio.Client.OBDDevice.InTheHandBluetooth
 {
     public class DeviceConnectionObserver : IObserver<IDeviceConnection>, IObservable<IOBDParsedResult>, IObserver<IOBDParsedResult>
     {
+        public bool Connected { get; set; }
+
         public IVehicle Vehicle { get { return _currentVehicle; } }
 
         private Vehicle _currentVehicle;

@@ -18,7 +18,10 @@ namespace Mojio.Client.OBDDevice
             _connection = connection;
             _parser = parser;
             _pidListProvider = pidListProvider;
+            Connected = false;
         }
+
+        public bool Connected { get; set; }
 
         public string Version { get; set; }
 
@@ -26,6 +29,8 @@ namespace Mojio.Client.OBDDevice
         {
             Task.Factory.StartNew(() =>
             {
+                Connected = _connection.Connected;
+
                 if (_connection.Connected)
                 {
                     // Perform a reset on the ELM.  If we get a null back from this call,
@@ -74,6 +79,7 @@ namespace Mojio.Client.OBDDevice
 
                     while (true)
                     {
+                        Connected = _connection.Connected;
                         UpdatePids();
                         //Task.Delay(100).Wait();
                     }

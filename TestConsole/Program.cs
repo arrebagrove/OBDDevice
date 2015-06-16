@@ -21,9 +21,16 @@ namespace TestConsole
 
             while (observer.Vehicle == null)
             {
-                Task.Delay(100).Wait();
+                Console.WriteLine("Waiting for Bluetooth connection to telematic device");
+                Task.Delay(1000).Wait();
             }
-
+            Console.WriteLine("Got a connection to the bluetooth telematic device");
+            while (!observer.Connected)
+            {
+                Console.WriteLine("Waiting for Vehicle OBD Connectivity");
+                Task.Delay(1000).Wait();
+            }
+            Console.WriteLine("Connected to the Vehicle OBD Port");
             Console.ReadKey();
         }
     }
