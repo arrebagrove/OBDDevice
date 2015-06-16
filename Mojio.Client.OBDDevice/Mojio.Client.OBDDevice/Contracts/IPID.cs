@@ -10,6 +10,8 @@ namespace Mojio.Client.OBDDevice.Contracts
     {
         IMeasure ParseMeasure(IOBDParsedResult result);
 
+        DateTimeOffset LastFailedReading { get; set; }
+
         bool IsMeasure { get; set; }
 
         string PIDValue { get; set; }

@@ -107,11 +107,15 @@ namespace Mojio.Client.OBDDevice
             if (pid.IsMeasure && pid.Enabled)
             {
                 r.Measure = pid.ParseMeasure(r);
+
+                pid.LastFailedReading = DateTimeOffset.MinValue;
                 if (!string.IsNullOrEmpty(r.Error))
                 {
-                    pid.Enabled = false;
+                    pid.LastFailedReading = DateTimeOffset.UtcNow;
                 }
             }
+
+            pid.Enabled = (DateTimeOffset.UtcNow - pid.LastFailedReading).Minutes <= 5; //if we had a failure in the last 5 min, disable it
 
             Push(r);
         }

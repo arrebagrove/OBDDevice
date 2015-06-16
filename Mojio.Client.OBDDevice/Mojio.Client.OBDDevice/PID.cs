@@ -1,6 +1,7 @@
 ﻿using Mojio.Client.OBDDevice.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,9 +19,9 @@ namespace Mojio.Client.OBDDevice
             {
                 if (result.RequestType == "Rpm")
                 {
-                    var data1 = (double?)Convert.ToInt32(result.Raw.Split(' ')[2], 16);
-                    var data2 = (double?)Convert.ToInt32(result.Raw.Split(' ')[3], 16);
-                    measure.Value = (int?)((data1 * 256) + data2) / 4;
+                    var data1 = Convert.ToInt32(result.Raw.Split(' ')[2], 16);
+                    var data2 = Convert.ToInt32(result.Raw.Split(' ')[3], 16);
+                    measure.Value = ((data1 * 256) + data2) / 4;
                 }
                 else if (result.RequestType == "Battery")
                 {
@@ -33,12 +34,23 @@ namespace Mojio.Client.OBDDevice
                 }
                 else
                 {
-                    measure.Value = (double?)Convert.ToInt32(result.Raw.Split(' ')[2], 16);
+                    double v = 0;
+                    var str = result.Raw.Split(' ')[2];
+                    if (double.TryParse(str, NumberStyles.HexNumber, new NumberFormatInfo(), out v))
+                    {
+                        measure.Value = v;
+                    }
+                    else
+                    {
+                        measure.Value = Convert.ToInt32(result.Raw.Split(' ')[2], 16);
+                    }
                 }
             }
             result.Measure = measure;
             return measure;
         }
+
+        public DateTimeOffset LastFailedReading { get; set; }
 
         public bool IsMeasure { get; set; }
 
